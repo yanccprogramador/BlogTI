@@ -4,10 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -15,12 +12,10 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,20 +36,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.yanccprogramador.blogti.Retrofit.UserService;
-import okhttp3.OkHttpClient;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.Retrofit;
+import br.com.yanccprogramador.blogti.BD.BancoController;
+
 import static com.android.volley.Request.Method.GET;
 import static com.android.volley.Request.Method.POST;
 
@@ -87,23 +78,16 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     private JsonObjectRequest req,req1;
     private RequestQueue mRequestQueue;
     private BancoController bc;
-    UserService service;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OkHttpClient client = new OkHttpClient.Builder().build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://yc-ti-blog.herokuapp.com/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        service= retrofit.create(UserService.class);
         bc=new BancoController(getBaseContext());
         setContentView(R.layout.activity_logar);
         Cursor c=bc.carregaUser();
-        if(c==null){
+        if(c.getString(c.getColumnIndex("login"))!=null){
              finish();
             Intent intent = new Intent(logar.this, MainActivity.class);
             startActivity(intent);
@@ -174,37 +158,26 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
          });
      }
 
-    private void postUser(String nome, String login, String senha) {
+    private void postUser(final String nome, final String login, final String senha) {
 
-        //try {
-            try {
+        try {
+
                 JSONObject js= new JSONObject();
                 js.put("nome",nome);
                 js.put("login",login);
                 js.put("senha",senha);
-                Toast.makeText(logar.this,"Entrei no try e criei o json: "+js.toString(),Toast.LENGTH_LONG).show();
-                JsonObject json= new JsonObject();
-                json.addProperty("nome",nome);
-                json.addProperty("login",login);
-                json.addProperty("senha",senha);
-                retrofit2.Response response= service.createUser(json).execute();
-               if(response.isSuccessful()){
-                   Toast.makeText(logar.this,"Registrado",Toast.LENGTH_LONG).show();
-               }
-            } catch (IOException e) {
-                Toast.makeText(logar.this,"Erro: "+e.getMessage(),Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            } catch (JSONException e) {
-                Toast.makeText(logar.this,"Erro: "+e.getMessage(),Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
 
-           /* req1= new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
+            req1= new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
                     new Response.Listener<JSONObject>() {
 
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             Toast.makeText(logar.this,"Registrado",Toast.LENGTH_LONG).show();
+                            bc.insereUser(nome, login, senha);
+                            Toast.makeText(logar.this,"Logado",Toast.LENGTH_LONG).show();
+                            finish();
+                            Intent intent = new Intent(logar.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -215,7 +188,8 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         } catch (JSONException e) {
             Toast.makeText(logar.this,"Erro: "+e.getMessage(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
-        }*/
+        }
+        addToRequestQueue(req1);
     }
 
     /**

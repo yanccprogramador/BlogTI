@@ -3,11 +3,11 @@ package br.com.yanccprogramador.blogti;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -39,18 +38,13 @@ import br.com.yanccprogramador.blogti.BD.BancoController;
 
 import static com.android.volley.Request.Method.GET;
 
-public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
+public class ActivityMine extends AppCompatActivity {
+    private ArrayList<Integer> listaMineId;
     private JsonObjectRequest req;
     private ArrayList<String> lista, listaMine;
-    private List<String> dono, articles;
-    private ArrayAdapter<String> adp, adpMine;
+    private ArrayAdapter<String>  adpMine;
     private RequestQueue mRequestQueue;
-    private Button save;
-    private JsonArrayRequest req1;
-    private ArrayList<Integer> listaMineId;
-    private ListView lv1,lv2;
+    private ListView lv2;
     private BancoController bc;
     BottomNavigationView navigation;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -60,84 +54,59 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    lista = new ArrayList<>();
-                    dono= new ArrayList<>();
-                    articles= new ArrayList<>();
-                    adp= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
-                    setContentView(R.layout.activity_main);
-                    navigation.setSelectedItemId(R.id.navigation_home);
-                    getAllArticles();
-                    lv1 = (ListView) findViewById(R.id.lv1);
-                    lv1.setAdapter(adp);
-                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            setContentView(R.layout.viewarticle);
-                            TextView tvT=(TextView) findViewById(R.id.tvTi);
-                            TextView tvD=(TextView) findViewById(R.id.tvDono);
-                            TextView tvA=(TextView) findViewById(R.id.tvArt);
-                            tvT.setText(lista.get(i));
-                            tvD.setText(dono.get(i));
-                            tvT.setText(articles.get(i));
-                        }
-                    });
+                    finish();
+                    Intent i= new Intent(ActivityMine.this,MainActivity.class);
+                    startActivity(i);
                     break;
                 case R.id.navigation_dashboard:
                     finish();
-                    Intent i= new Intent(MainActivity.this,ActivityPublish.class);
-                    startActivity(i);
-                    break;
-                case R.id.navigation_notifications:
-                    finish();
-                    Intent i2= new Intent(MainActivity.this,ActivityMine.class);
+                    Intent i2= new Intent(ActivityMine.this,ActivityPublish.class);
                     startActivity(i2);
                     break;
+                case R.id.navigation_notifications:
+                    listaMine= new ArrayList<>();
+                    listaMineId= new ArrayList<>();
+                    adpMine= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                    setContentView(R.layout.art);
+                    navigation.setSelectedItemId(R.id.navigation_notifications);
+                    lv2=(ListView) findViewById(R.id.lv3);
+                    getMyArticles();
+                    lv2.setAdapter(adpMine);
+                    break;
             }
-         return true;
+            return true;
         }
     };
 
 
-    public MainActivity() {
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        lista = new ArrayList<>();
-        dono= new ArrayList<>();
-        articles= new ArrayList<>();
-        adp= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
-        setContentView(R.layout.activity_main);
-         navigation= (BottomNavigationView) findViewById(R.id.nav);
+        listaMineId= new ArrayList<>();
+        listaMine= new ArrayList<>();
+        adpMine= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
+        setContentView(R.layout.art);
+        navigation= (BottomNavigationView) findViewById(R.id.nav3);
+        navigation.setSelectedItemId(R.id.navigation_notifications);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        getAllArticles();
-        lv1 = (ListView) findViewById(R.id.lv1);
-
-        lv1.setAdapter(adp);
-        lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setContentView(R.layout.viewarticle);
-                TextView tvT=(TextView) findViewById(R.id.tvTi);
-                TextView tvD=(TextView) findViewById(R.id.tvDono);
-                TextView tvA=(TextView) findViewById(R.id.tvArt);
-                   tvT.setText(lista.get(i));
-                   tvD.setText(dono.get(i));
-                   tvA.setText(articles.get(i));
-            }
-        });
+        lv2=(ListView) findViewById(R.id.lv3);
+        getMyArticles();
+        lv2.setAdapter(adpMine);
     }
-    private void getAllArticles() {
+    private void getMyArticles() {
+        bc=new BancoController(getBaseContext());
+        Cursor c=bc.carregaUser();
+        String login=c.getString(c.getColumnIndex("login"));
+        String url="https://yc-ti-blog.herokuapp.com/meu/yccp";
+        url=url.replace("yccp",login);
 
-
-        req = new JsonObjectRequest(GET, "https://yc-ti-blog.herokuapp.com/", null,
+        req = new JsonObjectRequest(Request.Method.GET,url, null,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onResponse(JSONObject response) {
-
                         try {
 
                             Log.i("Response", response.toString());
@@ -148,20 +117,17 @@ public class MainActivity extends AppCompatActivity {
 
                                 JSONObject items = js.getJSONObject(i);
                                 String titulo = items.getString("titulo");
-                                String owner = items.getString("dono");
-                                String artigo = items.getString("artigo");
+                                int id=items.getInt("id");
 
-                                lista.add(i,titulo);
-                                dono.add(i,owner);
-                                articles.add(i,artigo);
-
+                                listaMine.add(i,titulo);
+                                listaMineId.add(i,id);
 
 
                             }
 
                             finalize();
                             Toast.makeText(getApplicationContext(), "Busca Finalizada com sucesso!", Toast.LENGTH_SHORT).show();
-                            adp.addAll(lista);
+                            adpMine.addAll(listaMine);
                             Log.i("Fim", "Sucesso");
 
                         } catch (JSONException e) {
@@ -185,10 +151,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         addToRequestQueue(req);
     }
-
-
     public RequestQueue getRequestQueue() {
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -200,5 +165,4 @@ public class MainActivity extends AppCompatActivity {
         req.setTag("Volley");
         getRequestQueue().add(req);
     }
-
 }

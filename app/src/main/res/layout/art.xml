@@ -5,7 +5,7 @@
     android:id="@+id/container3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.yanccprogramador.blogti.MainActivity">
+    tools:context="br.com.yanccprogramador.blogti.ActivityMine">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -17,7 +17,7 @@
             tools:layout_editor_absoluteY="43dp" />
     </ScrollView>
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/nav"
+        android:id="@+id/nav3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"

@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.yanccprogramador.blogti.MainActivity">
+    tools:context="br.com.yanccprogramador.blogti.ActivityPublish">
      <ScrollView
          android:layout_width="match_parent"
          android:layout_height="wrap_content">
@@ -42,7 +42,8 @@
         app:layout_constraintTop_toBottomOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:editable="false"/>
+        android:editable="false"
+        android:enabled="false"/>
 
         android:layout_width="match_parent"
         android:layout_height="112dp"
@@ -64,23 +65,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="68dp"
         />
+         <Button
+             android:id="@+id/btPublish"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginEnd="100dp"
+             android:layout_marginStart="100dp"
+             android:text="@string/pub"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.0"
+             app:layout_constraintStart_toStartOf="parent"
+             tools:ignore="MissingConstraints"
+             tools:layout_editor_absoluteY="407dp"
+             app:layout_constraintBottom_toTopOf="@+id/nav2" />
      </LinearLayout>
+
      </ScrollView>
-    <Button
-        android:id="@+id/btPublish"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="100dp"
-        android:layout_marginStart="100dp"
-        android:text="@string/pub"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toTopOf="@+id/nav" />
+
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/nav"
+        android:id="@+id/nav2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"

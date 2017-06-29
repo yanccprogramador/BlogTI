@@ -1,4 +1,4 @@
-package br.com.yanccprogramador.blogti
+package br.com.yanccprogramador.blogti.BD
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -9,7 +9,7 @@ import org.w3c.dom.Text
 /**
  * Created by allanromanato on 5/27/15.
  */
-class CriaBanco(context: Context) : SQLiteOpenHelper(context, CriaBanco.NOME_BANCO, null, CriaBanco.VERSAO) {
+class CriaBanco(context: Context) : SQLiteOpenHelper(context, NOME_BANCO, null, VERSAO) {
 
     override fun onCreate(db: SQLiteDatabase) {
 
