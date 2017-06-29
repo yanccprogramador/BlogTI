@@ -20,5 +20,10 @@
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/iconperson"
         android:title="@string/title_notifications" />
+    <item
+        android:enabled="true"
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_notifications_black_24dp.xml"
+        android:title="@string/title_notifications" />
 
 </menu>
