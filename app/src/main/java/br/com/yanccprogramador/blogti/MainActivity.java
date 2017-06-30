@@ -60,28 +60,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    lista = new ArrayList<>();
-                    dono= new ArrayList<>();
-                    articles= new ArrayList<>();
-                    adp= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
-                    setContentView(R.layout.activity_main);
-                    navigation.setSelectedItemId(R.id.navigation_home);
-                    getAllArticles();
-                    lv1 = (ListView) findViewById(R.id.lv1);
-                    lv1.setAdapter(adp);
-                    lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            setContentView(R.layout.viewarticle);
-                            TextView tvT=(TextView) findViewById(R.id.tvTi);
-                            TextView tvD=(TextView) findViewById(R.id.tvDono);
-                            TextView tvA=(TextView) findViewById(R.id.tvArt);
-                            tvT.setText(lista.get(i));
-                            tvD.setText(dono.get(i));
-                            tvT.setText(articles.get(i));
-                        }
-                    });
-                    break;
+                   return false;
                 case R.id.navigation_dashboard:
                     finish();
                     Intent i= new Intent(MainActivity.this,ActivityPublish.class);
@@ -92,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
                     Intent i2= new Intent(MainActivity.this,ActivityMine.class);
                     startActivity(i2);
                     break;
+               /* case R.id.user:
+                    bc= new BancoController(getBaseContext());
+                    bc.deleteUser();
+                    finish();
+                    Intent i3= new Intent(MainActivity.this,logar.class);
+                    startActivity(i3);
+                    break;*/
             }
          return true;
         }
@@ -108,26 +94,11 @@ public class MainActivity extends AppCompatActivity {
         lista = new ArrayList<>();
         dono= new ArrayList<>();
         articles= new ArrayList<>();
-        adp= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
         setContentView(R.layout.activity_main);
          navigation= (BottomNavigationView) findViewById(R.id.nav);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         getAllArticles();
-        lv1 = (ListView) findViewById(R.id.lv1);
 
-        lv1.setAdapter(adp);
-        lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setContentView(R.layout.viewarticle);
-                TextView tvT=(TextView) findViewById(R.id.tvTi);
-                TextView tvD=(TextView) findViewById(R.id.tvDono);
-                TextView tvA=(TextView) findViewById(R.id.tvArt);
-                   tvT.setText(lista.get(i));
-                   tvD.setText(dono.get(i));
-                   tvA.setText(articles.get(i));
-            }
-        });
     }
     private void getAllArticles() {
 
@@ -161,7 +132,25 @@ public class MainActivity extends AppCompatActivity {
 
                             finalize();
                             Toast.makeText(getApplicationContext(), "Busca Finalizada com sucesso!", Toast.LENGTH_SHORT).show();
-                            adp.addAll(lista);
+                            if(adp==null){
+                                adp= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                            }
+                              adp.addAll(lista);
+                            lv1 = (ListView) findViewById(R.id.lv1);
+                            lv1.setAdapter(adp);
+                            lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    setContentView(R.layout.viewarticle);
+                                    TextView tvT=(TextView) findViewById(R.id.tvTi);
+                                    TextView tvD=(TextView) findViewById(R.id.tvDono);
+                                    TextView tvA=(TextView) findViewById(R.id.tvArt);
+                                    tvT.setText(lista.get(i));
+                                    tvD.setText(dono.get(i));
+                                    tvA.setText(articles.get(i));
+                                }
+                            });
+
                             Log.i("Fim", "Sucesso");
 
                         } catch (JSONException e) {

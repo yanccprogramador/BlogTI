@@ -21,6 +21,10 @@
     <string name="title_dashboard">Publish</string>
     <string name="title_notifications">Your Articles</string>
     <string name="title">Title</string>
+    <string name="usr">Log out</string>
+    <string name="wtd">What you gone do?</string>
+    <string name="del">Delete</string>
+    <string name="up">Update</string>
     <string name="dono">Owner</string>
     <string name="art">Article</string>
     <string name="pub">Publish</string>

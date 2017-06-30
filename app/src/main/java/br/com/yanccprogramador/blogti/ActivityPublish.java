@@ -50,27 +50,19 @@ public class ActivityPublish extends AppCompatActivity {
                     startActivity(i);
                     break;
                 case R.id.navigation_dashboard:
-                    setContentView(R.layout.publish);
-                    navigation.setSelectedItemId(R.id.navigation_dashboard);
-                    final EditText titulo= (EditText) findViewById(R.id.title);
-                    final EditText dono= (EditText) findViewById(R.id.dono);
-                    final EditText art= (EditText) findViewById(R.id.article);
-                    bc=new BancoController(getBaseContext());
-                    Cursor c= bc.carregaUser();
-                    dono.setText(c.getString(c.getColumnIndex("login")));
-                    save=(Button) findViewById(R.id.btPublish);
-                    save.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            inserir(titulo.getText().toString(), dono.getText().toString(),art.getText().toString());
-                        }
-                    });
-                    break;
+                    return false;
                 case R.id.navigation_notifications:
                     finish();
                     Intent i2= new Intent(ActivityPublish.this,ActivityMine.class);
                     startActivity(i2);
                     break;
+                /*case R.id.user:
+                    bc= new BancoController(getBaseContext());
+                    bc.deleteUser();
+                    finish();
+                    Intent i3= new Intent(ActivityPublish.this,logar.class);
+                    startActivity(i3);
+                    break;*/
             }
             return true;
         }

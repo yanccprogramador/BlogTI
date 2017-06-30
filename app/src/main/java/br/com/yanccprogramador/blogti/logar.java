@@ -87,12 +87,15 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         bc=new BancoController(getBaseContext());
         setContentView(R.layout.activity_logar);
         Cursor c=bc.carregaUser();
-        if(c.getString(c.getColumnIndex("login"))!=null){
-             finish();
-            Intent intent = new Intent(logar.this, MainActivity.class);
-            startActivity(intent);
-        }
+        try {
+            if (c.getString(c.getColumnIndex("login")) != null) {
+                finish();
+                Intent intent = new Intent(logar.this, MainActivity.class);
+                startActivity(intent);
+            }
+        }catch (Exception e){
 
+        }
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
