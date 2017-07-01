@@ -41,6 +41,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +132,19 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         mProgressView = findViewById(R.id.login_progress);
     }
 
+     public String cript(String senha){
+         MessageDigest md = null;
+         try {
+             md = MessageDigest.getInstance( "SHA" );
+         } catch (NoSuchAlgorithmException e) {
+             e.printStackTrace();
+         }
 
+         md.update( senha.getBytes() );
+         BigInteger hash = new BigInteger( 1, md.digest() );
+         String retornaSenha = hash.toString( 16 );
+         return retornaSenha;
+     }
 
 
     /**
@@ -162,37 +177,78 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
      }
 
     private void postUser(final String nome, final String login, final String senha) {
-
-        try {
-
-                JSONObject js= new JSONObject();
-                js.put("nome",nome);
-                js.put("login",login);
-                js.put("senha",senha);
-
-            req1= new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
+        if (nome!="" && login!="" && senha!="") {
+            req = new JsonObjectRequest(GET, "https://yc-ti-blog.herokuapp.com/usuario/"+login, null,
                     new Response.Listener<JSONObject>() {
-
+                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                         @Override
-                        public void onResponse(JSONObject jsonObject) {
-                            Toast.makeText(logar.this,"Registrado",Toast.LENGTH_LONG).show();
-                            bc.insereUser(nome, login, senha);
-                            Toast.makeText(logar.this,"Logado",Toast.LENGTH_LONG).show();
-                            finish();
-                            Intent intent = new Intent(logar.this, MainActivity.class);
-                            startActivity(intent);
+                        public void onResponse(JSONObject response) {
+                            final String login = "";
+                            String name = "";
+                            try {
+
+                                try {
+
+                                    JSONObject js = new JSONObject();
+                                    js.put("nome", nome);
+                                    js.put("login", login);
+                                    js.put("senha", cript(senha));
+
+                                    req1 = new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
+                                            new Response.Listener<JSONObject>() {
+
+                                                @Override
+                                                public void onResponse(JSONObject jsonObject) {
+                                                    Toast.makeText(logar.this, "Registrado", Toast.LENGTH_LONG).show();
+                                                    bc.insereUser(nome, login, cript(senha));
+                                                    Toast.makeText(logar.this, "Logado", Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                    Intent intent = new Intent(logar.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            }, new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError volleyError) {
+                                            Toast.makeText(logar.this, "Erro: " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } catch (JSONException e) {
+                                    Toast.makeText(logar.this, "Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                                addToRequestQueue(req1);
+
+                                finalize();
+
+                            } catch (JSONException e) {
+                                showProgress(false);
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(),
+                                        "Error, tente novamente",
+                                        Toast.LENGTH_LONG).show();
+                            } catch (Throwable throwable) {
+                                showProgress(false);
+                                throwable.printStackTrace();
+
+                            }
+
+
                         }
                     }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    Toast.makeText(logar.this,"Erro: "+volleyError.getMessage(),Toast.LENGTH_LONG).show();
+                public void onErrorResponse(VolleyError error) {
+                    showProgress(false);
+                    VolleyLog.d("Volley", "Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(),
+                            "Erro tente Novamente", Toast.LENGTH_SHORT).show();
+
                 }
             });
-        } catch (JSONException e) {
-            Toast.makeText(logar.this,"Erro: "+e.getMessage(),Toast.LENGTH_LONG).show();
-            e.printStackTrace();
+            addToRequestQueue(req);
+
+        }else {
+
         }
-        addToRequestQueue(req1);
     }
 
     /**
@@ -260,7 +316,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                                 JSONArray js = response.getJSONArray("rows");
                                 JSONObject linha=js.getJSONObject(0);
                                 String senha = linha.getString("senha");
-                                   if(senha.equals(mPasswordView.getText().toString())){
+                                   if(senha.equals(cript(mPasswordView.getText().toString()))){
 
                                        bc.insereUser(linha.getString("nome"), mEmailView.getText().toString(), senha);
                                        Toast.makeText(logar.this,"Logado",Toast.LENGTH_LONG).show();

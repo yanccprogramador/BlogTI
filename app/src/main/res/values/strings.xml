@@ -16,7 +16,7 @@
         completions."
     </string>
     <string name="erroSenha">User or password not found</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="dbclick">Click one more time to close the app</string>
     <string name="title_home">All Articles</string>
     <string name="title_dashboard">Publish</string>
     <string name="title_notifications">Your Articles</string>
@@ -25,6 +25,12 @@
     <string name="wtd">What you gone do?</string>
     <string name="del">Delete</string>
     <string name="up">Update</string>
+    <string name="required">All fields can not be empty</string>
+    <string name="inserted">Inserted</string>
+    <string name="finished">Search has been finish</string>
+    <string name="updated">Updated!!</string>
+    <string name="deleted">Deleted!!</string>
+    <string name="tente">Try again later!!</string>
     <string name="dono">Owner</string>
     <string name="art">Article</string>
     <string name="pub">Publish</string>

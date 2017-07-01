@@ -16,6 +16,7 @@
         completions."
     </string>
     <string name="erroSenha">Loguin ou senha não encontrado</string>
+    <string name="dbclick">Clique novamente para fechar o app</string>
     <string name="title_home">Todos artigos</string>
     <string name="title_dashboard">Publique</string>
     <string name="title_notifications">Seus artigos</string>
@@ -24,6 +25,12 @@
     <string name="wtd">O que você vai fazer?</string>
     <string name="del">Apagar</string>
     <string name="up">Atualizar</string>
+    <string name="required">Os campos precisam ser preenchidos</string>
+    <string name="inserted">Inserido</string>
+    <string name="finished">Busca Finalizada com Sucesso!!</string>
+    <string name="updated">Atualizado com sucesso!!</string>
+    <string name="deleted">Apagado com sucesso!!</string>
+    <string name="tente">Tente novamente mais tarde!!</string>
     <string name="dono">Dono</string>
     <string name="art">Artigo</string>
     <string name="pub">Publique</string>

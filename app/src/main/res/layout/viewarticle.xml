@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
@@ -15,19 +16,30 @@
         android:id="@+id/tvTi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textStyle="bold"
          />
 
     <TextView
         android:id="@+id/tvDono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="20dp"
         />
 
     <TextView
         android:id="@+id/tvArt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:inputType="textMultiLine"
         />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="back"
+            android:background="@drawable/ic_arrow_back_black_24dp"/>
         </LinearLayout>
     </ScrollView>
 
