@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("Fim", "Sucesso");
 
                         } catch (JSONException e) {
+                            showProgress(false);
                             e.printStackTrace();
                             Toast.makeText(getApplicationContext(),
                                     R.string.tente,

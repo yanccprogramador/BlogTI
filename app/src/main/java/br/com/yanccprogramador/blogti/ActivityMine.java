@@ -227,6 +227,7 @@ public class ActivityMine extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            showProgress(false);
                             Toast.makeText(getApplicationContext(),
                                     R.string.tente,
                                     Toast.LENGTH_LONG).show();
