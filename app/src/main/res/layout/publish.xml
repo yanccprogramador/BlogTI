@@ -61,7 +61,6 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btPublish"
-        style="@android:style/Widget.Button.Transparent"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginBottom="36dp"
