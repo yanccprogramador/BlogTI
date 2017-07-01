@@ -16,7 +16,7 @@
         android:id="@+id/tvTi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="30sp"
         android:textStyle="bold"
          />
 
@@ -24,21 +24,21 @@
         android:id="@+id/tvDono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="20sp"
         />
 
     <TextView
         android:id="@+id/tvArt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
+        android:textSize="20sp"
         android:inputType="textMultiLine"
         />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="back"
+        <Button
+            android:id="@+id/btBack"
+            android:layout_width="24pt"
+            android:layout_height="24pt"
             android:background="@drawable/ic_arrow_back_black_24dp"/>
         </LinearLayout>
     </ScrollView>

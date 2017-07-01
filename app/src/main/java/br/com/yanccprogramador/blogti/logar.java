@@ -76,11 +76,12 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private View mProgressView;
+    private View mProgressView,mProgressView2;
     private View mLoginFormView;
     private JsonObjectRequest req,req1;
     private RequestQueue mRequestQueue;
     private BancoController bc;
+    private View mLoginFormView2;
 
 
     @Override
@@ -185,7 +186,8 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                         public void onResponse(JSONObject response) {
 
                             try {
-                                mProgressView= findViewById(R.id.progress4);
+                                mLoginFormView2= findViewById(R.id.sv);
+                                mProgressView2= findViewById(R.id.progress4);
                                 showProgress2(true);
                                 try {
 
@@ -448,16 +450,20 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         int IS_PRIMARY = 1;
     }
     private void showProgress2(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
+            mLoginFormView2.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView2.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLoginFormView2.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
 
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            mProgressView2.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView2.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -467,8 +473,8 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-
+            mProgressView2.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLoginFormView2.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 

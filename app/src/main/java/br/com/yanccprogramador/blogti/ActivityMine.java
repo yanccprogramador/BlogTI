@@ -63,6 +63,7 @@ public class ActivityMine extends AppCompatActivity {
                 case R.id.navigation_home:
                     finish();
                     Intent i= new Intent(ActivityMine.this,MainActivity.class);
+                    i.putExtra("close",false);
                     startActivity(i);
                     break;
                 case R.id.navigation_dashboard:
@@ -318,6 +319,7 @@ public class ActivityMine extends AppCompatActivity {
     public void onBackPressed(){
         finish();
         Intent i=new Intent(this,MainActivity.class);
+        i.putExtra("close",true);
         startActivity(i);
         Toast.makeText(this,R.string.dbclick,Toast.LENGTH_LONG).show();
 

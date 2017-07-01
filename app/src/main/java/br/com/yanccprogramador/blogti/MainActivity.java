@@ -13,6 +13,8 @@ import android.support.design.widget.BottomNavigationView;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
         lista = new ArrayList<>();
         dono= new ArrayList<>();
         articles= new ArrayList<>();
+        try {
+            Bundle i = getIntent().getExtras();
+            pressed = i.getBoolean("close");
+        }catch(Exception e){
+
+        }
         setContentView(R.layout.activity_main);
         mProgressView = findViewById(R.id.progress);
          navigation= (BottomNavigationView) findViewById(R.id.nav);
@@ -156,9 +164,18 @@ public class MainActivity extends AppCompatActivity {
                                     TextView tvT=(TextView) findViewById(R.id.tvTi);
                                     TextView tvD=(TextView) findViewById(R.id.tvDono);
                                     TextView tvA=(TextView) findViewById(R.id.tvArt);
+                                    Spanned text=Html.fromHtml(articles.get(i).replace("\n","<br />"));
                                     tvT.setText(lista.get(i));
                                     tvD.setText("by: "+dono.get(i));
-                                    tvA.setText(articles.get(i));
+                                    tvA.setText(text);
+                                    Button bt=(Button) findViewById(R.id.btBack);
+                                    bt.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            back();
+                                        }
+                                    });
                                 }
                             });
                             showProgress(false);
@@ -228,7 +245,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public void back(){
         finish();
-        Intent i=new Intent(this,MainActivity.class);
+        Intent i=new Intent(MainActivity.this,MainActivity.class);
+        i.putExtra("close",false);
         startActivity(i);
     }
     @Override
@@ -236,9 +254,9 @@ public class MainActivity extends AppCompatActivity {
         if(!pressed) {
             finish();
             Intent i=new Intent(this,MainActivity.class);
+            i.putExtra("close",true);
             startActivity(i);
             Toast.makeText(this,R.string.dbclick,Toast.LENGTH_LONG).show();
-            pressed=true;
         }else{
             finish();
         }

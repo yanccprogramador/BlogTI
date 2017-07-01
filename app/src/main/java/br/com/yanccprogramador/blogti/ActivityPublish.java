@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spanned;
 import android.view.MenuItem;
@@ -34,7 +35,7 @@ import br.com.yanccprogramador.blogti.BD.BancoController;
 public class ActivityPublish extends AppCompatActivity {
     private JsonObjectRequest req;
     private boolean pressed=false;
-    private View mProgressView;
+    private View mProgressView,mLoginFormView;
     private Button save;
     private RequestQueue mRequestQueue;
     private ArrayList<Spanned> lista;
@@ -49,6 +50,7 @@ public class ActivityPublish extends AppCompatActivity {
                 case R.id.navigation_home:
                     finish();
                     Intent i = new Intent(ActivityPublish.this, MainActivity.class);
+                    i.putExtra("close",false);
                     startActivity(i);
                     break;
                 case R.id.navigation_dashboard:
@@ -80,6 +82,7 @@ public class ActivityPublish extends AppCompatActivity {
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mProgressView= findViewById(R.id.progress3);
+        mLoginFormView= findViewById(R.id.sv2);
         final EditText titulo = (EditText) findViewById(R.id.title);
         final EditText dono = (EditText) findViewById(R.id.dono);
         final EditText art = (EditText) findViewById(R.id.article);
@@ -141,6 +144,7 @@ public class ActivityPublish extends AppCompatActivity {
     public void onBackPressed(){
            finish();
            Intent i=new Intent(this,MainActivity.class);
+           i.putExtra("close",true);
            startActivity(i);
             Toast.makeText(this,R.string.dbclick,Toast.LENGTH_LONG).show();
 

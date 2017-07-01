@@ -10,11 +10,13 @@
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
      <ScrollView
+         android:id="@+id/sv2"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content">
+         android:layout_height="501dp"
+        >
      <LinearLayout
          android:layout_width="match_parent"
-         android:layout_height="wrap_content"
+         android:layout_height="match_parent"
          android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -52,23 +54,23 @@
         android:ems="10"
         android:inputType="textMultiLine"
         />
-         <Button
-             android:id="@+id/btPublish"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginEnd="100dp"
-             android:layout_marginStart="100dp"
-             android:text="@string/pub"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.0"
-             app:layout_constraintStart_toStartOf="parent"
-             tools:ignore="MissingConstraints"
-             tools:layout_editor_absoluteY="407dp"
-             app:layout_constraintBottom_toTopOf="@+id/nav2" />
+
      </LinearLayout>
 
      </ScrollView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btPublish"
+        style="@android:style/Widget.Button.Transparent"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="36dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/pub"
+        app:backgroundTint="@color/green"
+        app:layout_constraintBottom_toTopOf="@+id/nav2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_comment_black_24dp" />
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/nav2"
         android:layout_width="match_parent"
