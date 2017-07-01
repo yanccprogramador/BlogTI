@@ -183,10 +183,10 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                         @Override
                         public void onResponse(JSONObject response) {
-                            final String login = "";
-                            String name = "";
-                            try {
 
+                            try {
+                                mProgressView= findViewById(R.id.progress4);
+                                showProgress2(true);
                                 try {
 
                                     JSONObject js = new JSONObject();
@@ -199,6 +199,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
                                                 @Override
                                                 public void onResponse(JSONObject jsonObject) {
+                                                    showProgress2(false);
                                                     Toast.makeText(logar.this, "Registrado", Toast.LENGTH_LONG).show();
                                                     bc.insereUser(nome, login, cript(senha));
                                                     Toast.makeText(logar.this, "Logado", Toast.LENGTH_LONG).show();
@@ -213,6 +214,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                                         }
                                     });
                                 } catch (JSONException e) {
+                                    showProgress2(false);
                                     Toast.makeText(logar.this, "Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
@@ -307,8 +309,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onResponse(JSONObject response) {
-                        String login = "";
-                        String name = "";
+
                         try {
 
                             Log.i("Response", response.toString());
@@ -445,6 +446,30 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
+    }
+    private void showProgress2(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        }
     }
 
     /**

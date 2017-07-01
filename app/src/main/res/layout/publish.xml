@@ -6,6 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.yanccprogramador.blogti.ActivityPublish">
+    <ProgressBar android:id="@+id/progress3" style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" android:visibility="gone" />
      <ScrollView
          android:layout_width="match_parent"
          android:layout_height="wrap_content">

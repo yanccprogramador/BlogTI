@@ -1,7 +1,10 @@
 package br.com.yanccprogramador.blogti;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -30,6 +33,8 @@ import br.com.yanccprogramador.blogti.BD.BancoController;
 
 public class ActivityPublish extends AppCompatActivity {
     private JsonObjectRequest req;
+    private boolean pressed=false;
+    private View mProgressView;
     private Button save;
     private RequestQueue mRequestQueue;
     private ArrayList<Spanned> lista;
@@ -64,7 +69,7 @@ public class ActivityPublish extends AppCompatActivity {
             return true;
         }
     };
-    private boolean pressed=false;
+
 
 
     @Override
@@ -74,6 +79,7 @@ public class ActivityPublish extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.nav2);
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mProgressView= findViewById(R.id.progress3);
         final EditText titulo = (EditText) findViewById(R.id.title);
         final EditText dono = (EditText) findViewById(R.id.dono);
         final EditText art = (EditText) findViewById(R.id.article);
@@ -91,12 +97,14 @@ public class ActivityPublish extends AppCompatActivity {
 
     public void inserir(String titulo, String dono, String artigo) {
         if (!titulo.isEmpty() && !dono.isEmpty() && !artigo.isEmpty()) {
+            showProgress(true);
             artigo=removerCaracteresEspeciais(artigo);
             try {
                 req = new JsonObjectRequest(Request.Method.POST, "https://yc-ti-blog.herokuapp.com/", new JSONObject("{\"title\":\"" + titulo + "\",\"dono\":\"" + dono + "\",\"artigo\":\"" + artigo + "\"}"),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject jsonObject) {
+                                showProgress(false);
                                 Toast.makeText(ActivityPublish.this, R.string.inserted, Toast.LENGTH_LONG).show();
                                 Intent i= new Intent(ActivityPublish.this,ActivityMine.class);
                                 finish();
@@ -109,6 +117,7 @@ public class ActivityPublish extends AppCompatActivity {
                     }
                 });
             } catch (JSONException e) {
+                showProgress(false);
                 e.printStackTrace();
             }
             addToRequestQueue(req);
@@ -136,6 +145,30 @@ public class ActivityPublish extends AppCompatActivity {
             Toast.makeText(this,R.string.dbclick,Toast.LENGTH_LONG).show();
 
         return;
+    }
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        }
     }
     public String removerCaracteresEspeciais(String string) {
         string = Normalizer.normalize(string, Normalizer.Form.NFD);
