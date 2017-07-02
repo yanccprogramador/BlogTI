@@ -36,7 +36,7 @@ public class ActivityPublish extends AppCompatActivity {
     private JsonObjectRequest req;
     private boolean pressed=false;
     private View mProgressView,mLoginFormView;
-    private Button save;
+    private FloatingActionButton save;
     private RequestQueue mRequestQueue;
     private ArrayList<Spanned> lista;
     BottomNavigationView navigation;
@@ -89,7 +89,7 @@ public class ActivityPublish extends AppCompatActivity {
         bc = new BancoController(getBaseContext());
         Cursor c = bc.carregaUser();
         dono.setText(c.getString(c.getColumnIndex("login")));
-        save = (Button) findViewById(R.id.btPublish);
+        save = (FloatingActionButton) findViewById(R.id.btPublish);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

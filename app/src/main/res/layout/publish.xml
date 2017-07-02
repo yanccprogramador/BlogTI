@@ -61,11 +61,10 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btPublish"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="36dp"
         android:layout_marginEnd="32dp"
-        android:text="@string/pub"
         app:backgroundTint="@color/green"
         app:layout_constraintBottom_toTopOf="@+id/nav2"
         app:layout_constraintEnd_toEndOf="parent"
