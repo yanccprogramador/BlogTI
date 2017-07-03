@@ -17,6 +17,7 @@
     </string>
     <string name="erroSenha">User or password not found</string>
     <string name="dbclick">Click one more time to close the app</string>
+    <string name="nda">You have 0 articles</string>
     <string name="title_home">All Articles</string>
     <string name="title_dashboard">Publish</string>
     <string name="title_notifications">Your Articles</string>

@@ -21,6 +21,7 @@
     <string name="title_dashboard">Publique</string>
     <string name="title_notifications">Seus artigos</string>
     <string name="title">Titulo</string>
+    <string name="nda">Você não tem artigos</string>
     <string name="usr">Sair</string>
     <string name="wtd">O que você vai fazer?</string>
     <string name="del">Apagar</string>

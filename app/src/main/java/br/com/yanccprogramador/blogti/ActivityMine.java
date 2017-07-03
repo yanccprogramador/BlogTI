@@ -121,79 +121,87 @@ public class ActivityMine extends AppCompatActivity {
                         try {
 
                             Log.i("Response", response.toString());
-                            int limite= response.getInt("numLinhas");
-                            JSONArray js = response.getJSONArray("rows");
-                            for (int i = 0; i < limite; i++) {
+                            int limite = response.getInt("numLinhas");
+                            if (limite == 0) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMine.this);
+                                builder.setMessage(R.string.nda);
+                                // Create the AlertDialog object and return it
+                                builder.create().show();
+                            } else {
+                                JSONArray js = response.getJSONArray("rows");
+                                for (int i = 0; i < limite; i++) {
 
 
-                                JSONObject items = js.getJSONObject(i);
-                                String titulo = items.getString("titulo");
-                                String artigo = items.getString("artigo");
-                                int id=items.getInt("id");
+                                    JSONObject items = js.getJSONObject(i);
+                                    String titulo = items.getString("titulo");
+                                    String artigo = items.getString("artigo");
+                                    int id = items.getInt("id");
 
-                                listaMine.add(i,titulo);
-                                listaMineId.add(i,id);
-                                artigos.add(i,artigo);
+                                    listaMine.add(i, titulo);
+                                    listaMineId.add(i, id);
+                                    artigos.add(i, artigo);
 
 
-                            }
-
-                            finalize();
-                            Toast.makeText(getApplicationContext(), R.string.finished, Toast.LENGTH_SHORT).show();
-                            if(adpMine==null){
-                                adpMine= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
-                            }
-
-                            adpMine.addAll(listaMine);
-                            lv2=(ListView) findViewById(R.id.lv3);
-                            lv2.setAdapter(adpMine);
-                            lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMine.this);
-                                    builder.setMessage(R.string.wtd)
-                                            .setPositiveButton(R.string.up, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    setContentView(R.layout.update);
-                                                    final EditText titulo = (EditText) findViewById(R.id.title1);
-                                                    final EditText dono = (EditText) findViewById(R.id.dono1);
-                                                    final EditText art = (EditText) findViewById(R.id.article1);
-                                                    bc = new BancoController(getBaseContext());
-                                                    Cursor c = bc.carregaUser();
-                                                    dono.setText(c.getString(c.getColumnIndex("login")));
-                                                    titulo.setText(listaMine.get(position));
-                                                    art.setText(artigos.get(position));
-                                                    Button save = (Button) findViewById(R.id.btPublish1);
-                                                    save.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            update(titulo.getText().toString(), dono.getText().toString(), art.getText().toString(),listaMineId.get(position).toString());
-                                                        }
-                                                    });
-                                                    // FIRE ZE MISSILES!
-                                                }
-                                            })
-                                            .setNegativeButton(R.string.del, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    deleteArticle(listaMineId.get(position).toString());
-                                                }
-                                            });
-                                    // Create the AlertDialog object and return it
-                                    builder.create().show();
                                 }
-                            });
-                            showProgress(false);
-                            Log.i("Fim", "Sucesso");
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.tente,
-                                    Toast.LENGTH_LONG).show();
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
+                                finalize();
+                                Toast.makeText(getApplicationContext(), R.string.finished, Toast.LENGTH_SHORT).show();
+                                if (adpMine == null) {
+                                    adpMine = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
+                                }
 
-                        }
+                                adpMine.addAll(listaMine);
+                                lv2 = (ListView) findViewById(R.id.lv3);
+                                lv2.setAdapter(adpMine);
+                                lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMine.this);
+                                        builder.setMessage(R.string.wtd)
+                                                .setPositiveButton(R.string.up, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        setContentView(R.layout.update);
+                                                        final EditText titulo = (EditText) findViewById(R.id.title1);
+                                                        final EditText dono = (EditText) findViewById(R.id.dono1);
+                                                        final EditText art = (EditText) findViewById(R.id.article1);
+                                                        bc = new BancoController(getBaseContext());
+                                                        Cursor c = bc.carregaUser();
+                                                        dono.setText(c.getString(c.getColumnIndex("login")));
+                                                        titulo.setText(listaMine.get(position));
+                                                        art.setText(artigos.get(position));
+                                                        Button save = (Button) findViewById(R.id.btPublish1);
+                                                        save.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
+                                                                update(titulo.getText().toString(), dono.getText().toString(), art.getText().toString(), listaMineId.get(position).toString());
+                                                            }
+                                                        });
+                                                        // FIRE ZE MISSILES!
+                                                    }
+                                                })
+                                                .setNegativeButton(R.string.del, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        deleteArticle(listaMineId.get(position).toString());
+                                                    }
+                                                });
+                                        // Create the AlertDialog object and return it
+                                        builder.create().show();
+                                    }
+                                });
+                                showProgress(false);
+                                Log.i("Fim", "Sucesso");
+                            }
+
+                            } catch(JSONException e){
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(),
+                                        R.string.tente,
+                                        Toast.LENGTH_LONG).show();
+                            } catch(Throwable throwable){
+                                throwable.printStackTrace();
+
+                            }
+
 
 
                     }
