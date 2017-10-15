@@ -35,4 +35,5 @@
     <string name="dono">Owner</string>
     <string name="art">Article</string>
     <string name="pub">Publish</string>
+    <string name="title_activity_first">Blog TI</string>
 </resources>

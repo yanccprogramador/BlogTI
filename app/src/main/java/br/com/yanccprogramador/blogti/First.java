@@ -47,8 +47,9 @@ import java.util.List;
 import br.com.yanccprogramador.blogti.BD.BancoController;
 
 import static com.android.volley.Request.Method.GET;
+import static com.android.volley.Request.Method.POST;
 
-public class MainActivity extends AppCompatActivity {
+public class First extends AppCompatActivity {
 
     private TextView mTextMessage;
     private JsonObjectRequest req;
@@ -70,30 +71,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                   return false;
-                case R.id.navigation_dashboard:
-                    finish();
-                    Intent i= new Intent(MainActivity.this,ActivityPublish.class);
+                case R.id.logar:
+                    Intent i=new Intent(First.this,logar.class);
+                    i.putExtra("close",true);
                     startActivity(i);
                     break;
-                case R.id.navigation_notifications:
-                    finish();
-                    Intent i2= new Intent(MainActivity.this,ActivityMine.class);
-                    startActivity(i2);
-                    break;
-                case R.id.user:
-                    bc= new BancoController(getBaseContext());
-                    bc.deleteUser();
-                    finish();
-                    Intent i3= new Intent(MainActivity.this,logar.class);
-                    startActivity(i3);
-                    break;
+
             }
-         return true;
+            return true;
         }
     };
-
 
 
 
@@ -101,6 +88,78 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        bc=new BancoController(getBaseContext());
+        setContentView(R.layout.activity_logar);
+        Cursor c=bc.carregaUser();
+        try {
+            final String login=c.getString(c.getColumnIndex("login")) ;
+            final String senha=c.getString(c.getColumnIndex("senha")) ;
+            JSONObject js=null;
+            try {
+                js = new JSONObject();
+
+                js.put("login", login);
+
+                js.put("senha", senha);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            req = new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
+                    new Response.Listener<JSONObject>() {
+                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try {
+
+                                Log.i("Response", response.toString());
+                                if (response.getInt("numLinhas") == 1) {
+                                    boolean js = (boolean)response.get("success");
+                                    if(js){
+                                        finish();
+                                        Intent intent = new Intent(First.this, MainActivity.class);
+                                        intent.putExtra("close",false);
+                                        startActivity(intent);
+                                    }
+                                }else{
+                                    showProgress(false);
+                                    Toast.makeText(First.this, R.string.erroSenha,Toast.LENGTH_LONG).show();
+                                }
+
+                                finalize();
+
+                            } catch (JSONException e) {
+                                showProgress(false);
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(),
+                                        "Error, tente novamente",
+                                        Toast.LENGTH_LONG).show();
+                            } catch (Throwable throwable) {
+                                showProgress(false);
+                                throwable.printStackTrace();
+
+                            }
+
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    showProgress(false);
+                    VolleyLog.d("Volley", "Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(),
+                            "Erro tente Novamente", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            addToRequestQueue(req);
+
+        }catch (Exception e){
+
+        }
+
+
         lista = new ArrayList<>();
         dono= new ArrayList<>();
         articles= new ArrayList<>();
@@ -110,9 +169,9 @@ public class MainActivity extends AppCompatActivity {
         }catch(Exception e){
 
         }
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_first);
         mProgressView = findViewById(R.id.progress);
-         navigation= (BottomNavigationView) findViewById(R.id.nav);
+        navigation= (BottomNavigationView) findViewById(R.id.nav);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         getAllArticles();
 
@@ -152,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                             if(adp==null){
                                 adp= new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
                             }
-                              adp.addAll(lista);
+                            adp.addAll(lista);
                             lv1 = (ListView) findViewById(R.id.lv1);
                             lv1.setAdapter(adp);
                             lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -242,10 +301,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void back(){
-        finish();
-        Intent i=new Intent(MainActivity.this,MainActivity.class);
-        i.putExtra("close",false);
-        startActivity(i);
+        setContentView(R.layout.activity_first);
+        getAllArticles();
     }
     @Override
     public void onBackPressed(){

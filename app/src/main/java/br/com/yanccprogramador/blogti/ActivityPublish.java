@@ -101,7 +101,7 @@ public class ActivityPublish extends AppCompatActivity {
     public void inserir(String titulo, String dono, String artigo) {
         if (!titulo.isEmpty() && !dono.isEmpty() && !artigo.isEmpty()) {
             showProgress(true);
-            artigo=removerCaracteresEspeciais(artigo);
+            artigo=removerCaracteresEspeciais(artigo).replaceAll("\n","<br/>");
             try {
                 req = new JsonObjectRequest(Request.Method.POST, "https://yc-ti-blog.herokuapp.com/", new JSONObject("{\"title\":\"" + titulo + "\",\"dono\":\"" + dono + "\",\"artigo\":\"" + artigo + "\"}"),
                         new Response.Listener<JSONObject>() {

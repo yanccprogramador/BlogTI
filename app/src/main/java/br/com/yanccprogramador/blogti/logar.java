@@ -87,19 +87,8 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        bc=new BancoController(getBaseContext());
         setContentView(R.layout.activity_logar);
-        Cursor c=bc.carregaUser();
-        try {
-            if (c.getString(c.getColumnIndex("login")) != null) {
-                finish();
-                Intent intent = new Intent(logar.this, MainActivity.class);
-                startActivity(intent);
-            }
-        }catch (Exception e){
 
-        }
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -194,7 +183,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                                     JSONObject js = new JSONObject();
                                     js.put("nome", nome);
                                     js.put("login", login);
-                                    js.put("senha", cript(senha));
+                                    js.put("senha", senha);
 
                                     req1 = new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
                                             new Response.Listener<JSONObject>() {
@@ -207,6 +196,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                                                     Toast.makeText(logar.this, "Logado", Toast.LENGTH_LONG).show();
                                                     finish();
                                                     Intent intent = new Intent(logar.this, MainActivity.class);
+                                                    intent.putExtra("close",false);
                                                     startActivity(intent);
                                                 }
                                             }, new Response.ErrorListener() {
@@ -306,7 +296,19 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         return password.length() > 4;
     }
     private void verificaLogin(){
-        req = new JsonObjectRequest(GET, "https://yc-ti-blog.herokuapp.com/usuario/"+mEmailView.getText().toString(), null,
+        final String login=mEmailView.getText().toString();
+        final String senha=mPasswordView.getText().toString();
+        JSONObject js=null;
+        try {
+        js = new JSONObject();
+
+            js.put("login", login);
+
+        js.put("senha", senha);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        req = new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
@@ -316,15 +318,14 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
 
                             Log.i("Response", response.toString());
                             if (response.getInt("numLinhas") == 1) {
-                                JSONArray js = response.getJSONArray("rows");
-                                JSONObject linha=js.getJSONObject(0);
-                                String senha = linha.getString("senha");
-                                   if(senha.equals(cript(mPasswordView.getText().toString()))){
+                                boolean js = (boolean)response.get("success");
+                                   if(js){
 
-                                       bc.insereUser(linha.getString("nome"), mEmailView.getText().toString(), senha);
+                                       bc.insereUser("", mEmailView.getText().toString(), senha);
                                        Toast.makeText(logar.this,"Logado",Toast.LENGTH_LONG).show();
                                        finish();
                                        Intent intent = new Intent(logar.this, MainActivity.class);
+                                       intent.putExtra("close",false);
                                        startActivity(intent);
                                    }
                             }else{
