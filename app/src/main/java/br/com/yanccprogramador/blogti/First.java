@@ -301,14 +301,16 @@ public class First extends AppCompatActivity {
         }
     }
     public void back(){
-        setContentView(R.layout.activity_first);
-        getAllArticles();
+        finish();
+        Intent i=new Intent(First.this,First.class);
+        i.putExtra("close",false);
+        startActivity(i);
     }
     @Override
     public void onBackPressed(){
         if(!pressed) {
             finish();
-            Intent i=new Intent(this,MainActivity.class);
+            Intent i=new Intent(this,First.class);
             i.putExtra("close",true);
             startActivity(i);
             Toast.makeText(this,R.string.dbclick,Toast.LENGTH_LONG).show();

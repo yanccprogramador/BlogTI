@@ -47,6 +47,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import br.com.yanccprogramador.blogti.BD.BancoController;
 
 import static com.android.volley.Request.Method.GET;
@@ -61,7 +62,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
+    private boolean pressed;
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -88,7 +89,13 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logar);
+        try {
+            Bundle i = getIntent().getExtras();
+            pressed = i.getBoolean("close");
+        }catch(Exception e){
 
+        }
+        bc = new BancoController(getBaseContext());
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -121,20 +128,6 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-
-     public String cript(String senha){
-         MessageDigest md = null;
-         try {
-             md = MessageDigest.getInstance( "SHA" );
-         } catch (NoSuchAlgorithmException e) {
-             e.printStackTrace();
-         }
-
-         md.update( senha.getBytes() );
-         BigInteger hash = new BigInteger( 1, md.digest() );
-         String retornaSenha = hash.toString( 16 );
-         return retornaSenha;
-     }
 
 
     /**
@@ -192,7 +185,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                                                 public void onResponse(JSONObject jsonObject) {
                                                     showProgress2(false);
                                                     Toast.makeText(logar.this, "Registrado", Toast.LENGTH_LONG).show();
-                                                    bc.insereUser(nome, login, cript(senha));
+                                                    bc.insereUser(nome, login, senha);
                                                     Toast.makeText(logar.this, "Logado", Toast.LENGTH_LONG).show();
                                                     finish();
                                                     Intent intent = new Intent(logar.this, MainActivity.class);
@@ -308,7 +301,7 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        req = new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/", js,
+        req = new JsonObjectRequest(POST, "https://yc-ti-blog.herokuapp.com/usuario/logar", js,
                 new Response.Listener<JSONObject>() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
@@ -317,17 +310,14 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
                         try {
 
                             Log.i("Response", response.toString());
-                            if (response.getInt("numLinhas") == 1) {
-                                boolean js = (boolean)response.get("success");
-                                   if(js){
-
-                                       bc.insereUser("", mEmailView.getText().toString(), senha);
+                            if (response.getBoolean("success")){
+                                       bc.insereUser("", login, senha);
                                        Toast.makeText(logar.this,"Logado",Toast.LENGTH_LONG).show();
                                        finish();
                                        Intent intent = new Intent(logar.this, MainActivity.class);
                                        intent.putExtra("close",false);
                                        startActivity(intent);
-                                   }
+
                             }else{
                                 showProgress(false);
                                 Toast.makeText(logar.this, R.string.erroSenha,Toast.LENGTH_LONG).show();
@@ -360,6 +350,21 @@ public class logar extends AppCompatActivity implements LoaderCallbacks<Cursor> 
             }
         });
         addToRequestQueue(req);
+    }
+    @Override
+    public void onBackPressed(){
+        if(!pressed) {
+            finish();
+            Intent i=new Intent(this,First.class);
+            i.putExtra("close",true);
+            startActivity(i);
+            Toast.makeText(this,R.string.dbclick,Toast.LENGTH_LONG).show();
+        }else{
+            finish();
+        }
+
+
+        return;
     }
     /**
      * Shows the progress UI and hides the login form.

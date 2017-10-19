@@ -15,7 +15,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="erroSenha">Loguin ou senha não encontrado</string>
+    <string name="erroSenha">Login ou senha não encontrado</string>
     <string name="dbclick">Clique novamente para fechar o app</string>
     <string name="title_home">Todos artigos</string>
     <string name="title_dashboard">Publique</string>
